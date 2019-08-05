@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # An example of slide menu using Vue and Vue Router
 
 This is a simplified version of the responsive menu I implemented in the Admin Panel of a project some time ago. It uses [Vue.js](https://vuejs.org/) and [Vue Router](https://router.vuejs.org/) and shares some ideas of how to start puting the framework, router, styles and other concepts together.
@@ -154,3 +155,7 @@ yarn run lint
 
 ## License
 This menu is licensed under the [Mit License](https://opensource.org/licenses/MIT).
+=======
+# terraform-automation-tool
+vSphere &amp; vCAV automation tool project
+>>>>>>> 76c53b384e4051bbf893a42552b3286ee99e1929
