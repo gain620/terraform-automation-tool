@@ -7,14 +7,14 @@
 
       <li class="menu__top">
         <router-link to="/" class="menu__logo">
-          <img src="/icon-32.png" alt="icon">
+          <img src="../../public/icon32.png" alt="icon">
         </router-link>
         <a
         href="#"
         @click.prevent="openProjectLink"
         class="menu__title"
         >
-          Project Name...
+          VMware 자동화 툴
         </a>
       </li>
 
@@ -36,7 +36,7 @@
         :class="highlightSection('products')"
         >
           <i class="fa fa-tag menu__icon" aria-hidden="true"></i>
-          Products
+          vSphere automation
           <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
         </a>
       </li>
@@ -48,7 +48,7 @@
         :class="highlightSection('customers')"
         >
           <i class="fa fa-users menu__icon" aria-hidden="true"></i>
-          Customers
+          vCAV automation
           <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
         </a>
       </li>

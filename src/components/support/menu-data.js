@@ -7,25 +7,25 @@ export default {
 
     {
       type: 'title',
-      txt: 'Products',
+      txt: 'vSphere Automation',
       icon: 'fa fa-tag context-menu__title-icon',
     },
 
     {
       type: 'link',
-      txt: 'List Products',
+      txt: 'Create new VMs',
       link: '/page',
     },
 
     {
       type: 'link',
-      txt: 'Add New Product',
+      txt: 'Show all VMs',
       link: '/page',
     },
 
     {
       type: 'link',
-      txt: 'Manage Categories',
+      txt: 'Edit VMs',
       link: '/page',
     },
 
@@ -35,25 +35,19 @@ export default {
 
     {
       type: 'title',
-      txt: 'Customers',
+      txt: 'vCAV Automation',
       icon: 'fa fa-users context-menu__title-icon',
     },
 
     {
       type: 'link',
-      txt: 'List Customers',
+      txt: 'New Migration',
       link: '/page',
     },
 
     {
       type: 'link',
-      txt: 'List Contacts',
-      link: '/page',
-    },
-
-    {
-      type: 'link',
-      txt: 'List Newsletters',
+      txt: 'New Protection',
       link: '/page',
     },
 
