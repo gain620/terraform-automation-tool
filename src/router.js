@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import CreateVM from './views/CreateVM.vue'
 
 Vue.use(Router)
 
@@ -16,13 +17,18 @@ export default new Router({
       component: Home
     },
     {
-      path: '/page/:sectionSlug',
-      name: 'dynamicContent',
-      // route level code-splitting
-      // this generates a separate chunk (dynamicContent.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "dynamicContent" */ './views/DynamicContent.vue')
+      path: '/page/create-new-v-ms',
+      name: 'create-vm',
+      component: CreateVM
     },
+    // {
+    //   path: '/page/:sectionSlug',
+    //   name: 'dynamicContent',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (dynamicContent.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "dynamicContent" */ './views/DynamicContent.vue')
+    // },
 
   ]
 })
