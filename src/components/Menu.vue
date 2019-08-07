@@ -35,8 +35,20 @@
         @click.prevent="updateMenu('products')"
         :class="highlightSection('products')"
         >
-          <i class="fa fa-tag menu__icon" aria-hidden="true"></i>
+          <i class="fa fa-window-restore" aria-hidden="true"></i>
           vSphere automation
+          <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
+        </a>
+      </li>
+
+      <li>
+        <a
+        href="#"
+        @click.prevent="updateMenu('vCD')"
+        :class="highlightSection('vCD')"
+        >
+          <i class="fa fa-window-restore" aria-hidden="true"></i>
+          vCloudDirector automation
           <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
         </a>
       </li>
@@ -47,7 +59,7 @@
         @click.prevent="updateMenu('customers')"
         :class="highlightSection('customers')"
         >
-          <i class="fa fa-users menu__icon" aria-hidden="true"></i>
+          <i class="fa fa-cloud" aria-hidden="true"></i>
           vCAV automation
           <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
         </a>
@@ -136,7 +148,7 @@ export default {
   methods: {
 
     openProjectLink() {
-      alert('You could open the project frontend in another tab here, so the logged admin could see changes made to the project ;)');
+      // alert('You could open the project frontend in another tab here, so the logged admin could see changes made to the project ;)');
     },
 
     updateMenu(context) {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import CreateVM from './views/CreateVM.vue'
+import Show from './components/IndexMovie.vue'
 
 Vue.use(Router)
 
@@ -21,6 +22,11 @@ export default new Router({
       name: 'create-vm',
       component: CreateVM
     },
+    {
+      path: '/:id',
+      name: 'show',
+      component: Show
+    }
     // {
     //   path: '/page/:sectionSlug',
     //   name: 'dynamicContent',

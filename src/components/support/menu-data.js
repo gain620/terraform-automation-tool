@@ -8,7 +8,8 @@ export default {
     {
       type: 'title',
       txt: 'vSphere Automation',
-      icon: 'fa fa-tag context-menu__title-icon',
+      // icon: 'fa fa-tag context-menu__title-icon',
+      icon: 'fa fa-window-restore',
     },
 
     {
@@ -25,6 +26,47 @@ export default {
 
     {
       type: 'link',
+      txt: 'Edit networks',
+      link: '/page',
+    },
+
+    {
+      type: 'link',
+      txt: 'Edit VMs',
+      link: '/page',
+    },
+
+  ],
+
+  vCD: [
+
+    {
+      type: 'title',
+      txt: 'vCD Automation',
+      // icon: 'fa fa-tag context-menu__title-icon',
+      icon: 'fa fa-window-restore',
+    },
+
+    {
+      type: 'link',
+      txt: 'Create new VMs',
+      link: '/page',
+    },
+
+    {
+      type: 'link',
+      txt: 'Show all VMs',
+      link: '/page',
+    },
+
+    {
+      type: 'link',
+      txt: 'Edit networks',
+      link: '/page',
+    },
+
+    {
+      type: 'link',
       txt: 'Edit VMs',
       link: '/page',
     },
@@ -36,7 +78,7 @@ export default {
     {
       type: 'title',
       txt: 'vCAV Automation',
-      icon: 'fa fa-users context-menu__title-icon',
+      icon: 'fa fa-cloud',
     },
 
     {
@@ -79,29 +121,29 @@ export default {
       link: '/page',
     },
 
-    {
-      type: 'title',
-      txt: 'Change Subscription',
-      icon: 'fa fa-credit-card context-menu__title-icon',
-    },
+    // {
+    //   type: 'title',
+    //   txt: 'Change Subscription',
+    //   icon: 'fa fa-credit-card context-menu__title-icon',
+    // },
 
-    {
-      type: 'link',
-      txt: 'Plans',
-      link: '/page',
-    },
+    // {
+    //   type: 'link',
+    //   txt: 'Plans',
+    //   link: '/page',
+    // },
 
-    {
-      type: 'link',
-      txt: 'Payment Settings',
-      link: '/page',
-    },
+    // {
+    //   type: 'link',
+    //   txt: 'Payment Settings',
+    //   link: '/page',
+    // },
 
-    {
-      type: 'link',
-      txt: 'Payment History',
-      link: '/page',
-    },
+    // {
+    //   type: 'link',
+    //   txt: 'Payment History',
+    //   link: '/page',
+    // },
 
   ],
 
