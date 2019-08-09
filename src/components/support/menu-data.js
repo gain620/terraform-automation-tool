@@ -20,6 +20,12 @@ export default {
 
     {
       type: 'link',
+      txt: 'Destroy VMs',
+      link: '/page',
+    },
+
+    {
+      type: 'link',
       txt: 'Show all VMs',
       link: '/page',
     },

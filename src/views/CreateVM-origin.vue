@@ -13,61 +13,9 @@
         아래의 VM 설정들을 마치고 버튼을 누르면 terraform 스크립트가 실행됩니다!
       </p>
       <br>
-      <!--bootstrap-vue -->
-      <b-container fluid>
-        <!-- <b-row class="my-1" v-for="type in types" :key="type">
-          <b-col sm="3">
-            <label :for="`type-${type}`">Type {{ type }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-${type}`" :type="type"></b-form-input>
-          </b-col>
-        </b-row> -->
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-text`">VM Name {{ vmOptions.vmName }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-range`">CPU 코어 {{ vmOptions.vCPU }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-select v-model="selected" :options="cpuOptions"></b-form-select>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-range`">RAM 용량 {{ vmOptions.vRAM }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-select v-model="selected" :options="ramOptions"></b-form-select>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-text`">네트워크 이름 {{ vmOptions.vNetwork }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-text`">IPv4 {{ vmOptions.vIP }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
-          </b-col>
-        </b-row>
-      </b-container>
-
-      <!-- <span>VM 이름:</span>
+      <span>VM 이름:</span>
       <b-form-input v-model="vmOptions.vmName" placeholder="vm의 이름"></b-form-input>
-      <input v-model="vmOptions.vmName" placeholder="">
+      <!--input v-model="vmOptions.vmName" placeholder=""-->
       
       <br>
       <span>CPU 코어:</span>
@@ -97,7 +45,7 @@
           <option>redhat32Guest</option>
           <option>windowsGuest</option>
       </select>
-      <br> -->
+      <br>
       <div id="terraform_execute">
         <!--condition check for all options were selected!-->
           <button v-on:click="runTerra">Run Terraform</button>
@@ -115,39 +63,12 @@ export default {
   data(){
     return {
       name: 'Terraform 스크립트',
-      cpuOptions: [
-          { value: null, text: 'CPU 코어 선택' },
-          { value: '1', text: '1 core' },
-          { value: '2', text: '2 cores' },
-          { value: '4', text: '4 cores' },
-          { value: '8', text: '8 cores'}
-        ],
-      ramOptions: [
-          { value: null, text: 'RAM 용량 선택' },
-          { value: '1024', text: '1GB' },
-          { value: '2048', text: '2GB' },
-          { value: '4096', text: '4GB' },
-          { value: '8192', text: '8GB', disabled: false }
-        ],
-      types: [
-          'VM Name',
-          'password',
-          'email',
-          'number',
-          'url',
-          'tel',
-          'date',
-          `time`,
-          'range',
-          'color'
-      ],
       vmOptions: {
           vmName: "",
           vCPU: "",
           vRAM: "",
           vNetwork: "",
-          guest_id: "",
-          vIP: ""
+          guest_id: ""
       },
 
     }
