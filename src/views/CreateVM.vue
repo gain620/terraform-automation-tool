@@ -25,44 +25,51 @@
         </b-row> -->
         <b-row class="my-1">
         <b-col sm="3">
-            <label :for="`type-text`">VM Name {{ vmOptions.vmName }}:</label>
+            <label :for="`type-text`">VM Name :</label>
           </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-range`">CPU 코어 {{ vmOptions.vCPU }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-select v-model="selected" :options="cpuOptions"></b-form-select>
+          <b-col sm="2">
+            <b-form-input v-model="vmOptions.vmName" :id="`type-text`" :type="text"></b-form-input>
           </b-col>
         </b-row>
         <b-row class="my-1">
         <b-col sm="3">
-            <label :for="`type-range`">RAM 용량 {{ vmOptions.vRAM }}:</label>
+            <label :for="`type-range`">CPU 코어 :</label>
           </b-col>
-          <b-col sm="9">
-            <b-form-select v-model="selected" :options="ramOptions"></b-form-select>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-        <b-col sm="3">
-            <label :for="`type-text`">네트워크 이름 {{ vmOptions.vNetwork }}:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
+          <b-col sm="2">
+            <b-form-select v-model="vmOptions.vCPU" :options="cpuOptions"></b-form-select>
           </b-col>
         </b-row>
         <b-row class="my-1">
         <b-col sm="3">
-            <label :for="`type-text`">IPv4 {{ vmOptions.vIP }}:</label>
+            <label :for="`type-range`">RAM 용량 :</label>
           </b-col>
-          <b-col sm="9">
-            <b-form-input :id="`type-text`" :type="text"></b-form-input>
+          <b-col sm="2">
+            <b-form-select v-model="vmOptions.vRAM" :options="ramOptions"></b-form-select>
           </b-col>
         </b-row>
+        <b-row class="my-1">
+        <b-col sm="3">
+            <label :for="vm-netowrk">네트워크 이름 :</label>
+          </b-col>
+          <b-col sm="2">
+            <b-form-input v-model="vmOptions.vNetwork" :id="vm-netowrk" :type="text"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+        <b-col sm="3">
+            <label :for="vm-ip">IPv4 :</label>
+          </b-col>
+          <b-col sm="2">
+            <b-form-input v-model="vmOptions.vIP" :id="vm-ip" :type="text" :state="cidrState" aria-describedby="vm-ip-feedback" placeholder="CIDR 형식"></b-form-input>
+            <b-form-invalid-feedback id="vm-ip-feedback">
+      172.0.0.1/24와 같은 형식으로 입력!
+    </b-form-invalid-feedback>
+          </b-col>
+        </b-row>
+        <div id="terraform_execute">
+        <!--condition check for all options were selected!-->
+          <b-button pill variant="primary" v-on:click="runTerra">Run Terraform</b-button>
+      </div>
       </b-container>
 
       <!-- <span>VM 이름:</span>
@@ -98,10 +105,7 @@
           <option>windowsGuest</option>
       </select>
       <br> -->
-      <div id="terraform_execute">
-        <!--condition check for all options were selected!-->
-          <button v-on:click="runTerra">Run Terraform</button>
-      </div>
+      
     </div>
   </div>
 
@@ -112,6 +116,11 @@
 export default {
   name: 'create-vm',
 
+  computed: {
+      cidrState() {
+        return this.vmOptions.vIP.length > 14 ? true : false
+      }
+    },
   data(){
     return {
       name: 'Terraform 스크립트',
@@ -149,11 +158,121 @@ export default {
           guest_id: "",
           vIP: ""
       },
-
     }
   },
 
   methods: {
+    makeErrorToast(err) {
+
+        this.$bvToast.toast(err, {
+          title: '서버 오류 발생',
+          variant: 'danger',
+          solid: true,
+          noAutoHide : true,
+        })
+      },
+
+      popSuccessToast(msg) {
+        // Use a shorter name for this.$createElement
+        const h = this.$createElement
+        // Increment the toast count
+        // this.count++
+        // Create the message
+        const vNodesMsg = h(
+          'p',
+          { class: ['text-center', 'mb-0'] },
+          [
+            h('b-spinner', { props: {variant: 'success', type: 'grow', small: true } }),
+            `${msg} `,
+            // h('strong', {}, 'VM을 만드는 중...'),
+            // h('b-spinner', { props: { type: 'grow', small: true } })
+          ]
+        )
+        // Create the title
+        const vNodesTitle = h(
+          'div',
+          { class: ['d-flex', 'flex-grow-1', 'align-items-baseline', 'mr-2'] },
+          [
+            h('strong', { class: 'mr-2' }, 'VM 생성 완료'),
+            // h('small', { class: 'ml-auto text-italics' }, '5 minutes ago')
+          ]
+        )
+        // Pass the vNodes as an array for message and title
+        this.$bvToast.toast([vNodesMsg], {
+          title: [vNodesTitle],
+          solid: true,
+          variant: 'success',
+          noAutoHide : true,
+        })
+      },
+
+      popErrToast(err) {
+        // Use a shorter name for this.$createElement
+        const h = this.$createElement
+        // Increment the toast count
+        // this.count++
+        // Create the message
+        const vNodesMsg = h(
+          'p',
+          { class: ['text-center', 'mb-0'] },
+          [
+            h('b-spinner', { props: {variant: 'danger', type: 'grow', small: true } }),
+            `${err} `,
+            // h('strong', {}, 'VM을 만드는 중...'),
+            // h('b-spinner', { props: { type: 'grow', small: true } })
+          ]
+        )
+        // Create the title
+        const vNodesTitle = h(
+          'div',
+          { class: ['d-flex', 'flex-grow-1', 'align-items-baseline', 'mr-2'] },
+          [
+            h('strong', { class: 'mr-2' }, '서버 오류 발생'),
+            // h('small', { class: 'ml-auto text-italics' }, '5 minutes ago')
+          ]
+        )
+        // Pass the vNodes as an array for message and title
+        this.$bvToast.toast([vNodesMsg], {
+          title: [vNodesTitle],
+          solid: true,
+          variant: 'danger',
+          noAutoHide : true,
+        })
+      },
+    popToast() {
+        // Use a shorter name for this.$createElement
+        const h = this.$createElement
+        // Increment the toast count
+        // this.count++
+        // Create the message
+        const vNodesMsg = h(
+          'p',
+          { class: ['text-center', 'mb-0'] },
+          [
+            h('b-spinner', { props: { small: true } }),
+            ' 열심히 ',
+            `${this.vmOptions.vmName}`,
+            h('strong', {}, ' VM을 만드는 중...'),
+            // h('b-spinner', { props: { type: 'grow', small: true } })
+          ]
+        )
+        // Create the title
+        const vNodesTitle = h(
+          'div',
+          { class: ['d-flex', 'flex-grow-1', 'align-items-baseline', 'mr-2'] },
+          [
+            h('strong', { class: 'mr-2' }, 'VM 생성중'),
+            // h('small', { class: 'ml-auto text-italics' }, '5 minutes ago')
+          ]
+        )
+        // Pass the vNodes as an array for message and title
+        this.$bvToast.toast([vNodesMsg], {
+          title: [vNodesTitle],
+          solid: true,
+          variant: 'info',
+          noAutoHide: true
+        })
+      },
 
     runTerra(event) {
       /**
@@ -169,24 +288,26 @@ export default {
        * 
        * del /q terraform.tfstate
        */
-
+      this.popToast();
+      // this.makeErrorToast('test');
+      
+      var current = this;
       this.$http.post('/api/terraform', { //axios 사용
         vmOptions: this.vmOptions
       })
       .then((res) => {
-        console.log(res);
-        alert(res.data.testName + '를 실행합니다! ' + this.vmOptions.vmName+' VM을 생성중...');
-        // if (response.data.result === 0) {
-        //   alert('Error, please, try again')
-        // }
-        // if (response.data.result === 1) {
-        //   alert('Success')
-          // this.$router.push('/login') // Login 페이지로 보내줌
+        //console.log(res);
+        console.log(this);
+
+        // alert(res.data.testName + '를 실행합니다! ' + this.vmOptions.vmName+' VM을 생성중...');
+        this.popErrToast(res.data.testName);
       })
       .catch(function (error) {
-        alert(error);
+        // alert(error);
+        // console.log(this);
+        current.popSuccessToast(`${error}`);
       });
-    
+    // this.makeErrorToast();
     // this.$http.get(`https://jsonplaceholder.typicode.com/posts/42`)
     //   .then((result) => {
     //     console.log(result);
@@ -200,7 +321,8 @@ export default {
         // alert(event.target.tagName);
       }
   
-      }
+      },
+
   }
 }
 
