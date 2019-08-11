@@ -14,7 +14,7 @@
         @click.prevent="openProjectLink"
         class="menu__title"
         >
-          VMware 자동화 툴
+          VMware Automation Tool
         </a>
       </li>
 

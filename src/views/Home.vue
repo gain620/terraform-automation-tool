@@ -4,14 +4,14 @@
 
     <div class="main-content__top">
         <h1 class="main-content__title">
-            Terraform with VMware on KT Cloud Prototype
+            VMware Automation Tool Prototype
         </h1>
     </div>
 
     <div class="main-content__body">
 
       <p>
-        Terraform을 이용한 VMware on KT Cloud 프로토타입 UI
+        Terraform을 이용한 VMware 자동화 툴 프로토타입 데모
       </p>
 
     </div>

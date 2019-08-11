@@ -10,17 +10,15 @@
 
     <div class="main-content__body">
       <p>
-        현재 vSphere의 VM들
+        vSphere VM 리스트
       </p>
+      <b-button pill variant="info" v-on:click="showVMs" style="margin-left:1500px; margin-top:-70px">VM 조회</b-button>
       <br>
       <div>
-        <b-table striped hover :items="vmList"></b-table>
+        <b-table striped hover :items="vmList" :fields="fields"></b-table>
         <!-- <p>VM 총 갯수: {{ vmList.length }}</p> -->
       </div>
-      <div id="terraform_execute">
-        <!--condition check for all options were selected!-->
-          <button v-on:click="showVMs">VM 조회</button>
-      </div>
+
     </div>
   </div>
 
@@ -34,6 +32,7 @@ export default {
   data(){
     return {
       // name: 'Terraform 스크립트',
+      fields: ['vm', 'name', 'memory_size_MiB', 'power_state', 'cpu_count'],
       vmList: [
         {
             "memory_size_MiB": 2048,
