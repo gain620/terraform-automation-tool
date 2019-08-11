@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import CreateVM from './views/CreateVM.vue'
+import ShowVM from './views/ShowVM.vue'
 import Show from './components/IndexMovie.vue'
 
 Vue.use(Router)
@@ -21,6 +22,11 @@ export default new Router({
       path: '/page/create-new-v-ms',
       name: 'create-vm',
       component: CreateVM
+    },
+    {
+      path: '/page/show-all-v-ms',
+      name: 'show-vm',
+      component: ShowVM
     },
     {
       path: '/:id',

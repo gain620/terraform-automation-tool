@@ -14,7 +14,7 @@ export default {
         /* eslint-disable */
 
       this.movie = response.data;
-      console.log(response.data);
+      console.log(response.data[0]);
     })
   },
   data: function () {

@@ -4,13 +4,13 @@
 
     <div class="main-content__top">
         <h1 class="main-content__title">
-            Select VM options and make terraform scripts
+            Select VM options and run terraform scripts
         </h1>
     </div>
 
     <div class="main-content__body">
       <p>
-        아래의 VM 설정들을 마치고 버튼을 누르면 terraform 스크립트가 실행됩니다!
+        아래의 VM 설정값을 입력하고 버튼을 누르면 terraform 스크립트가 실행됩니다!
       </p>
       <br>
       <!--bootstrap-vue -->
@@ -25,10 +25,18 @@
         </b-row> -->
         <b-row class="my-1">
         <b-col sm="3">
-            <label :for="`type-text`">VM Name :</label>
+            <label :for="`type-text`">VM 갯수 :</label>
           </b-col>
           <b-col sm="2">
-            <b-form-input v-model="vmOptions.vmName" :id="`type-text`" :type="text"></b-form-input>
+            <b-form-input v-model="vmOptions.vCount" :id="`type-text`" :type="text"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+        <b-col sm="3">
+            <label :for="`type-text`">VM 이름 :</label>
+          </b-col>
+          <b-col sm="2">
+            <b-form-input v-model="vmOptions.vm_name" :id="`type-text`" :type="text"></b-form-input>
           </b-col>
         </b-row>
         <b-row class="my-1">
@@ -36,7 +44,7 @@
             <label :for="`type-range`">CPU 코어 :</label>
           </b-col>
           <b-col sm="2">
-            <b-form-select v-model="vmOptions.vCPU" :options="cpuOptions"></b-form-select>
+            <b-form-select v-model="vmOptions.num_cpus" :options="cpuOptions"></b-form-select>
           </b-col>
         </b-row>
         <b-row class="my-1">
@@ -44,7 +52,23 @@
             <label :for="`type-range`">RAM 용량 :</label>
           </b-col>
           <b-col sm="2">
-            <b-form-select v-model="vmOptions.vRAM" :options="ramOptions"></b-form-select>
+            <b-form-select v-model="vmOptions.memory" :options="ramOptions"></b-form-select>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+        <b-col sm="3">
+            <label :for="`type-text`">VM 디스크 용량 (GB) :</label>
+          </b-col>
+          <b-col sm="2">
+            <b-form-input v-model="vmOptions.disk_size" :id="`type-text`" :type="text"></b-form-input>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+        <b-col sm="3">
+            <label :for="`type-range`">OS :</label>
+          </b-col>
+          <b-col sm="2">
+            <b-form-select v-model="vmOptions.guest_id" :options="osOptions"></b-form-select>
           </b-col>
         </b-row>
         <b-row class="my-1">
@@ -60,51 +84,20 @@
             <label :for="vm-ip">IPv4 :</label>
           </b-col>
           <b-col sm="2">
-            <b-form-input v-model="vmOptions.vIP" :id="vm-ip" :type="text" :state="cidrState" aria-describedby="vm-ip-feedback" placeholder="CIDR 형식"></b-form-input>
+            <b-form-input v-model="vmOptions.vm_ip" :id="vm-ip" :type="text" :state="cidrState" aria-describedby="vm-ip-feedback" placeholder="CIDR 형식"></b-form-input>
             <b-form-invalid-feedback id="vm-ip-feedback">
       172.0.0.1/24와 같은 형식으로 입력!
     </b-form-invalid-feedback>
           </b-col>
         </b-row>
-        <div id="terraform_execute">
+        <div id="terraform_execute" style="margin-left:365px;margin-top:30px;" >
         <!--condition check for all options were selected!-->
+          <b-button pill variant="danger" v-on:click="refreshPage" style="margin-right:15px">Cancel</b-button>
+          <b-button pill variant="info" v-on:click="runSave" style="margin-right:15px">Save</b-button>
           <b-button pill variant="primary" v-on:click="runTerra">Run Terraform</b-button>
-      </div>
+        </div>
       </b-container>
 
-      <!-- <span>VM 이름:</span>
-      <b-form-input v-model="vmOptions.vmName" placeholder="vm의 이름"></b-form-input>
-      <input v-model="vmOptions.vmName" placeholder="">
-      
-      <br>
-      <span>CPU 코어:</span>
-      <select v-model="vmOptions.vCPU">
-          <option>1</option>
-          <option>2</option>
-          <option>4</option>
-      </select>
-      <br>
-      <span>RAM 용량:</span>
-      <select v-model="vmOptions.vRAM">
-          <option>1GB</option>
-          <option>2GB</option>
-          <option>4GB</option>
-      </select>
-      <br>
-      <span>네트워크:</span>
-      <select v-model="vmOptions.vNetwork">
-          <option>VM Network</option>
-          <option>CIP Portgroup</option>
-      </select>
-      <br>
-      <span>GuestOS ID:</span>
-      <select v-model="vmOptions.guest_id">
-          <option>ubuntu64Guest</option>
-          <option>centOS64Guest</option>
-          <option>redhat32Guest</option>
-          <option>windowsGuest</option>
-      </select>
-      <br> -->
       
     </div>
   </div>
@@ -118,26 +111,33 @@ export default {
 
   computed: {
       cidrState() {
-        return this.vmOptions.vIP.length > 14 ? true : false
+        return this.vmOptions.vm_ip.length > 14 ? true : false
       }
     },
   data(){
     return {
       name: 'Terraform 스크립트',
       cpuOptions: [
-          { value: null, text: 'CPU 코어 선택' },
+          { value: null, text: 'CPU 코어 선택', disabled: true },
           { value: '1', text: '1 core' },
           { value: '2', text: '2 cores' },
           { value: '4', text: '4 cores' },
           { value: '8', text: '8 cores'}
         ],
       ramOptions: [
-          { value: null, text: 'RAM 용량 선택' },
+          { value: null, text: 'RAM 용량 선택', disabled: true },
           { value: '1024', text: '1GB' },
           { value: '2048', text: '2GB' },
           { value: '4096', text: '4GB' },
           { value: '8192', text: '8GB', disabled: false }
         ],
+      osOptions: [
+        { value: null, text: 'OS 선택', disabled: true },
+          { value: 'ubuntu64Guest', text: 'Ubuntu Server 16.04' },
+          { value: 'centOS64Guest', text: 'CentOS 7' },
+          { value: 'redhat32Guest', text: 'Red Hat 7.6' },
+          { value: 'windowsGuest', text: 'Windows Server 2012', disabled: true }
+      ],
       types: [
           'VM Name',
           'password',
@@ -151,17 +151,22 @@ export default {
           'color'
       ],
       vmOptions: {
-          vmName: "",
-          vCPU: "",
-          vRAM: "",
+          vCount: "",
+          vm_name: "",
+          num_cpus: null,
+          memory: null,
+          disk_size: "",
           vNetwork: "",
-          guest_id: "",
-          vIP: ""
+          guest_id: null,
+          vm_ip: ""
       },
     }
   },
 
   methods: {
+    refreshPage() {
+      window.location.reload();
+    },
     makeErrorToast(err) {
 
         this.$bvToast.toast(err, {
@@ -202,7 +207,8 @@ export default {
           title: [vNodesTitle],
           solid: true,
           variant: 'success',
-          noAutoHide : true,
+          autoHideDelay: 10000,
+          // noAutoHide : true,
         })
       },
 
@@ -270,9 +276,14 @@ export default {
           title: [vNodesTitle],
           solid: true,
           variant: 'info',
-          noAutoHide: true
+          autoHideDelay: 10000,
+          //noAutoHide: true
         })
       },
+
+    runSave() {
+      this.popSuccessToast('구성 환경 저장 완료!');
+    },
 
     runTerra(event) {
       /**
@@ -289,23 +300,22 @@ export default {
        * del /q terraform.tfstate
        */
       this.popToast();
-      // this.makeErrorToast('test');
-      
-      var current = this;
+
+      console.log(this.vmOptions);
+      //var current = this; use arrow function instead
       this.$http.post('/api/terraform', { //axios 사용
         vmOptions: this.vmOptions
       })
       .then((res) => {
-        //console.log(res);
-        console.log(this);
+        // console.log(this);
 
         // alert(res.data.testName + '를 실행합니다! ' + this.vmOptions.vmName+' VM을 생성중...');
-        this.popErrToast(res.data.testName);
+        this.popSuccessToast(res.data.testName);
       })
-      .catch(function (error) {
+      .catch((error) => {
         // alert(error);
         // console.log(this);
-        current.popSuccessToast(`${error}`);
+        this.popErrToast(`${error}`);
       });
     // this.makeErrorToast();
     // this.$http.get(`https://jsonplaceholder.typicode.com/posts/42`)
@@ -313,10 +323,6 @@ export default {
     //     console.log(result);
     //     // this.posts = result.data
     //   });
-  
-
-      
-      
       if(event) {
         // alert(event.target.tagName);
       }
