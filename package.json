@@ -12,6 +12,7 @@
     "bootstrap-vue": "^2.0.0-rc.27",
     "lodash": "^4.17.10",
     "vue": "^2.5.16",
+    "vue-draggable-resizable": "^2.0.0-rc2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

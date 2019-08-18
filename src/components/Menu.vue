@@ -1,152 +1,114 @@
 <template>
-
   <div class="menu-container">
-
     <!-- root level itens -->
     <ul class="menu">
-
       <li class="menu__top">
         <router-link to="/" class="menu__logo">
-          <img src="../../public/icon32.png" alt="icon">
+          <img src="../../public/icon32.png" alt="icon" />
         </router-link>
-        <a
-        href="#"
-        @click.prevent="openProjectLink"
-        class="menu__title"
-        >
-          VMware Automation Tool
+        <a href="#" @click.prevent="openProjectLink" class="menu__title">VMware Automation Tool</a>
+      </li>
+
+      <li>
+        <a href="#" @click.prevent="updateMenu('home')" :class="highlightSection('home')">
+          <i class="fa fa-home menu__icon" aria-hidden="true"></i>
+          Home
         </a>
       </li>
 
       <li>
-        <a
-        href="#"
-        @click.prevent="updateMenu('home')"
-        :class="highlightSection('home')"
-        >
-            <i class="fa fa-home menu__icon" aria-hidden="true"></i>
-            Home
-        </a>
-      </li>
-
-      <li>
-        <a
-        href="#"
-        @click.prevent="updateMenu('products')"
-        :class="highlightSection('products')"
-        >
+        <a href="#" @click.prevent="updateMenu('products')" :class="highlightSection('products')">
           <i class="fa fa-window-restore" aria-hidden="true"></i>
           vSphere automation
-          <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
+          <i
+            class="fa fa-chevron-right menu__arrow-icon"
+            aria-hidden="true"
+          ></i>
         </a>
       </li>
 
       <li>
-        <a
-        href="#"
-        @click.prevent="updateMenu('vCD')"
-        :class="highlightSection('vCD')"
-        >
+        <a href="#" @click.prevent="updateMenu('vCD')" :class="highlightSection('vCD')">
           <i class="fa fa-window-restore" aria-hidden="true"></i>
           vCloudDirector automation
-          <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
+          <i
+            class="fa fa-chevron-right menu__arrow-icon"
+            aria-hidden="true"
+          ></i>
         </a>
       </li>
 
       <li>
-        <a
-        href="#"
-        @click.prevent="updateMenu('customers')"
-        :class="highlightSection('customers')"
-        >
+        <a href="#" @click.prevent="updateMenu('customers')" :class="highlightSection('customers')">
           <i class="fa fa-cloud" aria-hidden="true"></i>
           vCAV automation
-          <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
+          <i
+            class="fa fa-chevron-right menu__arrow-icon"
+            aria-hidden="true"
+          ></i>
         </a>
       </li>
 
       <li>
-        <a
-        href="#"
-        @click.prevent="updateMenu('account')"
-        :class="highlightSection('account')"
-        >
+        <a href="#" @click.prevent="updateMenu('account')" :class="highlightSection('account')">
           <i class="fa fa-user menu__icon" aria-hidden="true"></i>
           Account
           <i class="fa fa-chevron-right menu__arrow-icon" aria-hidden="true"></i>
         </a>
       </li>
-
     </ul>
 
     <!-- context menu: childs of root level itens -->
     <transition name="slide-fade">
-
       <div class="context-menu-container" v-show="showContextMenu">
-
         <ul class="context-menu">
-
           <li v-for="(item, index) in menuItens" :key="index">
-
             <h5 v-if="item.type === 'title'" class="context-menu__title">
-
               <i :class="item.icon" aria-hidden="true"></i>
-
               {{item.txt}}
-
               <a
-              v-if="index === 0"
-              @click.prevent="closeContextMenu"
-              class="context-menu__btn-close"
-              href="#"
+                v-if="index === 0"
+                @click.prevent="closeContextMenu"
+                class="context-menu__btn-close"
+                href="#"
               >
                 <i class="fa fa-window-close" aria-hidden="true"></i>
               </a>
-
             </h5>
 
             <a
-            v-else
-            href="#"
-            @click.prevent="openSection(item)"
-            :class="subMenuClass(item.txt)"
-            >
-              {{item.txt}}
-            </a>
-
+              v-else
+              href="#"
+              @click.prevent="openSection(item)"
+              :class="subMenuClass(item.txt)"
+            >{{item.txt}}</a>
           </li>
-
         </ul>
-
       </div>
-
     </transition>
-
   </div>
-
 </template>
 
 <script>
-import menuData from './support/menu-data';
-import kebabCase from 'lodash/kebabCase';
+import menuData from "./support/menu-data";
+import kebabCase from "lodash/kebabCase";
 
 export default {
-  name: 'Menu',
+  name: "Menu",
 
-  data(){
+  data() {
     return {
-      contextSection: '',
+      contextSection: "",
 
       menuItens: [],
 
       menuData: menuData,
 
-      activeSubMenu: ''
-    }
+      activeSubMenu: ""
+    };
   },
 
   methods: {
-
     openProjectLink() {
       // alert('You could open the project frontend in another tab here, so the logged admin could see changes made to the project ;)');
     },
@@ -155,28 +117,28 @@ export default {
       this.contextSection = context;
       this.menuItens = this.menuData[context];
 
-      if (context === 'home') {
-        this.$router.push('/');
-        window.bus.$emit('menu/closeMobileMenu');
+      if (context === "home") {
+        this.$router.push("/");
+        window.bus.$emit("menu/closeMobileMenu");
       }
     },
 
     highlightSection(section) {
       return {
-        'menu__link': true,
-        'menu__link--active': section === this.contextSection,
+        menu__link: true,
+        "menu__link--active": section === this.contextSection
       };
     },
 
     subMenuClass(subMenuName) {
       return {
-        'context-menu__link': true,
-        'context-menu__link--active': this.activeSubMenu === subMenuName,
+        "context-menu__link": true,
+        "context-menu__link--active": this.activeSubMenu === subMenuName
       };
     },
 
     closeContextMenu() {
-      this.contextSection = '';
+      this.contextSection = "";
       this.menuItens = [];
     },
 
@@ -184,7 +146,7 @@ export default {
       this.activeSubMenu = item.txt;
 
       this.$router.push(this.getUrl(item));
-      window.bus.$emit('menu/closeMobileMenu');
+      window.bus.$emit("menu/closeMobileMenu");
     },
 
     getUrl(item) {
@@ -192,14 +154,12 @@ export default {
 
       return `${item.link}/${sectionSlug}`;
     }
-
   },
 
   computed: {
     showContextMenu() {
       return this.menuItens.length;
-    },
+    }
   }
-
-}
+};
 </script>

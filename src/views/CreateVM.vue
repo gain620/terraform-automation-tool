@@ -28,7 +28,7 @@
             <label :for="`type-text`">VM 갯수 :</label>
           </b-col>
           <b-col sm="2">
-            <b-form-input v-model="vmOptions.vCount" :id="`type-text`" :type="text"></b-form-input>
+            <b-form-input v-b-tooltip.hover title="2대이상 생성 시 VM 이름에 번호 추가" v-model="vmOptions.vCount" :id="`type-text`" :type="text"></b-form-input>
           </b-col>
         </b-row>
         <b-row class="my-1">

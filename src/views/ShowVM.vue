@@ -160,7 +160,7 @@ export default {
 
   created: function () {
     // var id = this.$route.params.id
-    this.$http.get(`/api/movies/1`)
+    this.$http.get(``)
     .then((response) => {
         /* eslint-disable */
 
