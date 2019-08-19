@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
 
 body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 .main-content__top {
@@ -23,4 +23,8 @@ body {
 
 .main-content__body {
   margin-top: 80px;
+}
+
+.instCl p:hover {
+  color: blue;
 }
