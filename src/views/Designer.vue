@@ -7,6 +7,7 @@
     <div class="main-content__body">
       <div style="height: 450px; width: 700px; border: 2px solid black; position: relative;">
         <vue-draggable-resizable
+          style="border-style:hidden;"
           v-for="(inst, index) in vmInstancesNewTest"
           :key="index"
           :x="inst.x"
@@ -98,6 +99,7 @@
 
         <!-- test DB -->
         <vue-draggable-resizable
+          style="border-style:hidden;"
           v-for="(inst, index) in dbInstances"
           :key="index"
           :x="inst.x"
