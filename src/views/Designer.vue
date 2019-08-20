@@ -290,13 +290,49 @@
       <template slot="modal-title">인프라 구조 불러오기</template>
       <div class="d-block text-center">
         <b-button @click="toggleBusy">인프라 리스트 갱신</b-button>
-
-        <b-table :items="items" :busy="isBusy" class="mt-3" outlined>
+        <b-table :items="infraList" :fields="infraTableFields" :busy="isBusy" class="mt-3" outlined>
           <div slot="table-busy" class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
             <strong>&nbsp;&nbsp;Loading...</strong>
           </div>
+
+          <template slot="load_infra" slot-scope="row">
+            <!-- <button class="button is-small is-light" @click="test(row.item.infra_name)">
+              <b-icon icon="edit" size="is-small"></b-icon>
+            </button>-->
+            <b-button size="sm" @click="loadInfraModal(row.item.infra_name)" class="mr-2">Load</b-button>
+
+            <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @change -->
+            <!-- <b-form-checkbox
+              v-model="row.detailsShowing"
+              @change="row.toggleDetails"
+            >Details via check</b-form-checkbox>-->
+          </template>
+
+          <!-- <template slot="row-details" slot-scope="row">
+            <b-card>
+              <b-row class="mb-2">
+                <b-col sm="3" class="text-sm-right">
+                  <b>Age:</b>
+                </b-col>
+                <b-col>{{ row.item.age }}</b-col>
+              </b-row>
+
+              <b-row class="mb-2">
+                <b-col sm="3" class="text-sm-right">
+                  <b>Is Active:</b>
+                </b-col>
+                <b-col>{{ row.item.isActive }}</b-col>
+              </b-row>
+
+              <b-button size="sm" @click="row.toggleDetails">Hide Details</b-button>
+            </b-card>
+          </template>-->
         </b-table>
+
+        <!-- <b-table :items="infraList" :busy="isBusy" class="mt-3" outlined>
+
+        </b-table>-->
       </div>
       <b-button
         pill
@@ -322,12 +358,13 @@ export default {
   },
   data() {
     return {
-      isBusy: true,
-      items: [
-        { Infra_Name: "Netflix", Owner: "Hastings", Date: 40 },
-        { Infra_Name: "Microsoft", Owner: "Nadella", Date: 21 },
-        { Infra_Name: "Amazon", Owner: "Bezos", Date: 89 },
-        { Infra_Name: "KT", Owner: "Hwang", Date: 38 }
+      isBusy: false,
+      infraTableFields: ["infra_name", "owner", "edit_date", "load_infra"],
+      infraList: [
+        { infra_name: "Netflix", owner: "Hastings", edit_date: 40 },
+        { infra_name: "Microsoft", owner: "Nadella", edit_date: 21 },
+        { infra_name: "Amazon", owner: "Bezos", edit_date: 89 },
+        { infra_name: "KT", owner: "Hwang", edit_date: 38 }
       ],
       width: 0,
       height: 0,
@@ -446,7 +483,7 @@ export default {
       // inst.x = x;
       // inst.y = y;
       console.log(x + "," + y);
-      console.log(this);
+      // console.log(this);
     },
     showCoords: function(instance) {
       instance.x = window.event.clientX - 292;
@@ -539,6 +576,9 @@ export default {
       console.log("the instance was deleted!");
     },
     openModal: function(id) {
+      if (id == "bv-modal-loadInfra") {
+        this.loadInfraList();
+      }
       this.$bvModal.show(id);
     },
     saveInfraModal: function() {
@@ -567,7 +607,32 @@ export default {
           alert(error);
         });
     },
-    loadInfraModal: function() {},
+    loadInfraList: function() {
+      // var curr = this;
+      this.$http
+        .get("/api/terraform/loadInfraList")
+        .then(res => {
+          // curr.isBusy = true;
+          this.infraList = res.data;
+        })
+        .catch(err => {
+          alert(err);
+        });
+    },
+    loadInfraModel: function(reqInfraName) {
+      this.$http
+        .get(`/api/terraform/loadInfraModel?infraName=${reqInfraName}`)
+        .then(res => {
+          this.vmInstances = res.data;
+        })
+        .catch(err => {
+          alert(err);
+        });
+    },
+    loadInfraModal: function(reqName) {
+      this.$bvModal.hide("bv-modal-loadInfra");
+      this.loadInfraModel(reqName);
+    },
     loadInfra: function() {
       this.$http
         .get("/api/terraform/load")
