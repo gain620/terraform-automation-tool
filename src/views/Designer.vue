@@ -16,10 +16,10 @@
           :key="index"
           :x="inst.x"
           :y="inst.y"
-          :w="180"
-          :h="120"
+          :w="inst.nw_width"
+          :h="inst.nw_height"
           @dragging="showCoords(inst)"
-          @resizing="onResize"
+          @resizing="showSize(inst)"
           :parent="true"
           :resizable="true"
         >
@@ -240,7 +240,7 @@
           v-on:click="openModal('bv-modal-saveInfra')"
           style="margin-right:15px"
         >Save</b-button>
-        <b-button pill variant="primary" v-on:click="testConsole">Run Terraform</b-button>
+        <b-button pill variant="primary" v-on:click="loadInfra">Run Terraform</b-button>
       </div>
 
       <div
@@ -419,6 +419,8 @@ export default {
         {
           x: 0,
           y: 1,
+          nw_width: 180,
+          nw_height: 130,
           nw_name: "External Subnet",
           nw_gw_cidr: "172.16.0.1/24",
           nw_type: "Routed",
@@ -473,17 +475,22 @@ export default {
     toggleBusy: function() {
       this.isBusy = !this.isBusy;
     },
-    onResize: function(x, y, width, height) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
+    onResize: function(width, height, instance) {
+      instance.width = width;
+      instance.height = height;
     },
     onDrag: function(x, y) {
       // inst.x = x;
       // inst.y = y;
       console.log(x + "," + y);
       // console.log(this);
+    },
+
+    showSize: function(instance) {
+      instance.nw_width = Math.abs(window.event.clientX - instance.x);
+      instance.nw_height = Math.abs(window.event.clientY - instance.y);
+      // var coords = "X coords: " + a + ", Y coords: " + b;
+      console.log(instance.nw_width + ", "+ instance.nw_height);
     },
     showCoords: function(instance) {
       instance.x = window.event.clientX - 292;
@@ -492,7 +499,6 @@ export default {
       // console.log(coords);
     },
     testConsole: function() {
-      console.log(this.dbInstances);
     },
     addVM: function() {
       // console.log(this.instancesNew);
@@ -518,13 +524,15 @@ export default {
       this.nwInstances.push({
         x: Math.floor(Math.random() * (300 - 1)) + 1,
         y: Math.floor(Math.random() * (300 - 1)) + 1,
+        nw_width: 130,
+        nw_height: 150,
         nw_name: "",
         nw_gw_cidr: "",
         nw_type: null,
         edge_gw: null,
         dns: "",
         nw_static_pool: "",
-        nwModal: "modal-" + `${Math.random() * 10}`
+        nwModal: "nwmodal-" + `${Math.random() * 10}`
       });
     },
     addDB: function() {
@@ -637,14 +645,14 @@ export default {
       this.$http
         .get("/api/terraform/load")
         .then(res => {
-          console.log(res.data);
-          this.vmInstances = res.data;
-          // this.vmInstances = res;
+          this.vmInstances = res.data[0];
+          this.nwInstances = res.data[1];
+          this.dbInstances = res.data[2];
         })
         .catch(err => {
           alert(err);
         });
-      console.log(this.vmInstances);
+      // console.log(this.vmInstances);
     }
   }
 };
