@@ -99,7 +99,15 @@
               </b-row>
               <b-row class="my-1">
                 <b-col sm="3">
-                  <label :for="vm-netowrk">네트워크 이름 :</label>
+                  <label :for="`type-range`">Platform :</label>
+                </b-col>
+                <b-col sm="5">
+                  <b-form-select v-model="inst.vPlatform" :options="platformOptions"></b-form-select>
+                </b-col>
+              </b-row>
+              <b-row class="my-1">
+                <b-col sm="3">
+                  <label :for="vm-netowrk">네트워크 :</label>
                 </b-col>
                 <b-col sm="5">
                   <b-form-input v-model="inst.vNetwork" :id="vm-netowrk" :type="text"></b-form-input>
@@ -225,9 +233,15 @@
           </div>
         </vue-draggable-resizable>
       </div>
-      <div id="terraform_execute" style="margin-left:580px;margin-top:20px; margin-bottom:30px;">
+      <div id="terraform_execute" style="margin-left:510px;margin-top:20px; margin-bottom:30px;">
         <!--condition check for all options were selected!-->
         <b-button pill variant="danger" v-on:click="refreshPage" style="margin-right:15px">Cancel</b-button>
+        <b-button
+          pill
+          variant="info"
+          v-on:click="openModal('bv-modal-shareInfra')"
+          style="margin-right:15px"
+        >Share</b-button>
         <b-button
           pill
           variant="info"
@@ -251,6 +265,45 @@
         <b-button variant v-on:click="addDB" style="margin-bottom:10px">Add DB</b-button>
       </div>
     </div>
+
+
+    <!--shareInfraModal-->
+    <b-modal id="bv-modal-shareInfra" hide-footer>
+      <template slot="modal-title">인프라 구조 공유</template>
+      <div class="d-block text-center">
+        <label for="infra-input-live">인프라 코드:</label>
+        <b-form-input
+          id="infra-input-live"
+          v-model="infraName123"
+          aria-describedby="input-live-help input-live-feedback"
+          placeholder="인프라 코드 입력"
+          trim
+        ></b-form-input>
+
+      </div>
+      <b-button-group style="margin-left:80px;">
+        <b-button
+          pill
+          variant="danger"
+          class="mt-3"
+          @click="$bvModal.hide('bv-modal-shareInfra')"
+        >Cancel</b-button>
+        <b-button
+          style="margin-left:100px;"
+          pill
+          variant="info"
+          class="mt-3"
+          @click="saveInfraModal"
+        >Import</b-button>
+        <b-button
+          style="margin-left:40px;"
+          pill
+          variant="primary"
+          class="mt-3"
+          @click="saveInfraModal"
+        >Export</b-button>
+      </b-button-group>
+    </b-modal>
 
     <!--saveInfraModal-->
     <b-modal id="bv-modal-saveInfra" hide-footer>
@@ -340,7 +393,7 @@
         class="mt-3"
         @click="$bvModal.hide('bv-modal-loadInfra')"
       >Cancel</b-button>
-      <b-button pill variant="primary" class="mt-3" @click="loadInfraModal">Load</b-button>
+      <b-button pill style="margin-left:50px;" variant="primary" class="mt-3" @click="loadInfraModal">Load</b-button>
     </b-modal>
   </div>
 </template>
@@ -382,6 +435,7 @@ export default {
           disk_size: "",
           vNetwork: "",
           guest_id: null,
+          vPlatform: null,
           vm_ip: "",
           vmModal: "modal-0"
         },
@@ -395,6 +449,7 @@ export default {
           disk_size: "",
           vNetwork: "",
           guest_id: null,
+          vPlatform: null,
           vm_ip: "",
           vmModal: "modal-1"
         }
@@ -456,6 +511,15 @@ export default {
         { value: "mysql", text: "MySQL" },
         { value: "mongodb", text: "MongoDB" },
         { value: "postgre", text: "PostgreSQL" }
+      ],
+      platformOptions: [
+        { value: null, text: "Platform 선택", disabled: true },
+        { value: "python", text: "Python 3.6" },
+        { value: "ruby", text: "Ruby" },
+        { value: "dotnet", text: "C#" },
+        { value: "nodejs", text: "Node.js 10.16" },
+        { value: "java", text: "Java" },
+        { value: "tomcat", text: "Tomcat" }
       ],
       types: [
         "VM Name",
